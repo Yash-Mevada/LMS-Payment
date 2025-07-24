@@ -8,6 +8,10 @@ import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
+import healthRoute from "./routes/health.routes.js";
+import userRoute from "./routes/user.routes.js";
+
 const app = express();
 
 // rate limit
@@ -57,6 +61,12 @@ app.use(
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// API route
+
+app.use("/health", healthRoute);
+
+app.use("/api/vi/user", userRoute);
 
 // global error handler
 //404 route
