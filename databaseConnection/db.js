@@ -49,6 +49,7 @@ class DatabaseConnection {
       }
 
       await mongoose.connect(process.env.MONGODB_URI, connectionOptions);
+      console.info("MongoDB connection established successfully");
       this.retryCount = 0;
     } catch (error) {
       console.error(error);

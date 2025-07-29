@@ -2,6 +2,7 @@ import express from "express";
 import {
   authenticateUser,
   createUserAccount,
+  deleteUserAccount,
   getCurrentUserProfile,
   signOutUser,
   updateUserProfile,
@@ -25,5 +26,8 @@ router.patch(
   upload.single("avatar"),
   updateUserProfile
 );
+
+// Account delete
+router.delete("/account", isAuthenticated, deleteUserAccount);
 
 export default router;

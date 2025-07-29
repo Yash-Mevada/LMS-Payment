@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minLength: [8, "Password can be minimum 8 character"],
-      select: true,
+      select: false,
     },
     role: {
       type: String,
@@ -108,7 +108,7 @@ userSchema.virtual("totalEnrolledCourse").get(function () {
 // update last active user
 userSchema.methods.updateLastActive = function () {
   this.lastActive = Date.now();
-  return this.lastActive({ validateBeforeSave: false });
+  return this.save({ validateBeforeSave: false });
 };
 
 export const User = mongoose.model("User", userSchema);

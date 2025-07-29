@@ -1,9 +1,10 @@
 import { body, query, param, validationResult } from "express-validator";
+import { ApiError } from "./error.middleware.js";
 
 export const validate = (validations) => {
   return async (req, res, next) => {
     // run all validation
-    await Promise.all(validations.map(validation.run(req)));
+    await Promise.all(validations.map((validation) => validation.run(req)));
 
     const errors = validationResult(req);
     if (errors.isEmpty()) {
@@ -15,7 +16,7 @@ export const validate = (validations) => {
       message: err.msg,
     }));
 
-    throw new Error("Validation error");
+    throw new ApiError(`Validation error `, 400, extractedError);
   };
 };
 

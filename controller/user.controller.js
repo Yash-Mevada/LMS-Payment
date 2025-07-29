@@ -1,7 +1,7 @@
-import { ApiError, catchAsync } from "../middleware/error.middleware";
-import { User } from "../model/user.model";
-import { deleteImage, uploadMedia } from "../utils/cloudinary";
-import { generateToken } from "../utils/generateToken";
+import { ApiError, catchAsync } from "../middleware/error.middleware.js";
+import { User } from "../model/user.model.js";
+import { deleteImage, uploadMedia } from "../utils/cloudinary.js";
+import { generateToken } from "../utils/generateToken.js";
 
 export const createUserAccount = catchAsync(async (req, res) => {
   const { name, email, password, role = "student" } = req.body;
@@ -26,21 +26,22 @@ export const createUserAccount = catchAsync(async (req, res) => {
 export const authenticateUser = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email: email.toLowerCase() }).select(
+  const user = await User.findOne({ email: email?.toLowerCase() }).select(
     "+password"
   );
 
-  if (!user || !(await user.comparePassword(user))) {
+  if (!user || !(await user.comparePassword(password))) {
     throw new ApiError("Invalid email or password ", 401);
   }
 
   await user.updateLastActive();
+  // await user.select("-password");
 
   generateToken(res, user, `welcome back ${user.name}`);
 });
 
 export const signOutUser = catchAsync(async (req, res) => {
-  res.cookies("token", "", {
+  res.cookie("token", "", {
     maxAge: 0,
   });
 
@@ -51,7 +52,7 @@ export const signOutUser = catchAsync(async (req, res) => {
 });
 
 export const getCurrentUserProfile = catchAsync(async (req, res) => {
-  const user = await User.findOne(req.id).populate({
+  const user = await User.findOne({ id: req.id }).populate({
     path: "enrolledCourse",
     select: "title description thumbnail",
   });
@@ -104,5 +105,24 @@ export const updateUserProfile = catchAsync(async (req, res) => {
     success: true,
     message: "Profile updated successfully",
     data: updateUser,
+  });
+});
+
+export const deleteUserAccount = catchAsync(async (req, res) => {
+  const userId = req.id;
+
+  const isUserExist = await User.findById(userId);
+  if (!isUserExist) {
+    throw new ApiError("User Data not found", 404);
+  }
+  if (isUserExist || isUserExist.avatar !== "default-avatar.png") {
+    await deleteImage(isUserExist.avatar);
+  }
+
+  await User.deleteOne({ id: userId });
+
+  res.status(200).cookie("token", "", { maxAge: 0 }).json({
+    success: true,
+    message: "Account deleted successfully",
   });
 });

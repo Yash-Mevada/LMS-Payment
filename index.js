@@ -8,9 +8,16 @@ import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import connectDB from "./databaseConnection/db.js";
 
 import healthRoute from "./routes/health.routes.js";
 import userRoute from "./routes/user.routes.js";
+
+// Load environment variables
+dotenv.config();
+
+// Connect to database
+await connectDB();
 
 const app = express();
 
@@ -24,7 +31,7 @@ const limiter = rateLimit({
 app.use(hpp());
 app.use(helmet());
 app.use("/api", limiter);
-app.use(mongoSanitize());
+// app.use(mongoSanitize());
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === "development") {
@@ -65,8 +72,7 @@ app.get("/", (req, res) => {
 // API route
 
 app.use("/health", healthRoute);
-
-app.use("/api/vi/user", userRoute);
+app.use("/api/v1/user", userRoute);
 
 // global error handler
 //404 route

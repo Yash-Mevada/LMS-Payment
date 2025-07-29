@@ -7,7 +7,7 @@ export const generateToken = (res, user, message) => {
 
   return res
     .status(200)
-    .cookies("token", token, {
+    .cookie("token", token, {
       httpOnly: true,
       sameSite: "strict",
       maxAge: 24 * 60 * 60 * 1000, // 1 day

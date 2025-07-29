@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ApiError, catchAsync } from "./error.middleware";
+import { ApiError, catchAsync } from "./error.middleware.js";
 
 export const isAuthenticated = catchAsync(async (req, res, next) => {
   const token = req.cookies.token;

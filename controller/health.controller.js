@@ -1,4 +1,4 @@
-import { getDBStatus } from "../databseConnection/db";
+import { getDBStatus } from "../databaseConnection/db.js";
 
 function getReadyStateText(state) {
   switch (state) {
@@ -18,7 +18,7 @@ function getReadyStateText(state) {
 
 export const healthCheck = async (req, res) => {
   try {
-    const dbStatus = getDBStatus();
+    const dbStatus = await getDBStatus();
 
     const healthStatus = {
       status: "OK",
@@ -40,7 +40,7 @@ export const healthCheck = async (req, res) => {
     };
 
     const httpStatus =
-      healthStatus.server.database.status === "healthy" ? 200 : 503;
+      healthStatus.service?.database.status === "healthy" ? 200 : 503;
     res.status(httpStatus).json(healthStatus);
   } catch (error) {
     console.error("Health check Failed", error);
