@@ -8,10 +8,11 @@ import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectDB from "./databaseConnection/db.js";
+import connectDB from "../databaseConnection/db.js";
+import serverless from "serverless-http";
 
-import healthRoute from "./routes/health.routes.js";
-import userRoute from "./routes/user.routes.js";
+import healthRoute from "../routes/health.routes.js";
+import userRoute from "../routes/user.routes.js";
 
 // Load environment variables
 dotenv.config();
@@ -89,3 +90,6 @@ app.listen(process.env.PORT, () => {
     `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`
   );
 });
+
+//  export as a serverless function
+export const handler = serverless(app);
