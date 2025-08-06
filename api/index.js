@@ -85,11 +85,11 @@ app.use((req, res) => {
 });
 
 // server listen
-app.listen(process.env.PORT, () => {
-  console.log(
-    `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`
-  );
-});
+// app.listen(process.env.PORT, () => {
+//   console.log(
+//     `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`
+//   );
+// });
 
 //  export as a serverless function
 export const handler = serverless(app);
