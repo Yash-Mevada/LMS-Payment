@@ -67,6 +67,7 @@ app.use(
 );
 
 app.get("/user", (req, res) => {
+  console.log("user----------------------------api------------");
   res.status(200).json({ data: "Hello World!" });
 });
 
