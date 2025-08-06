@@ -92,4 +92,4 @@ app.use((req, res) => {
 // });
 
 //  export as a serverless function
-export const handler = serverless(app);
+export default serverless(app);
