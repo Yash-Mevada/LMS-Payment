@@ -31,7 +31,7 @@ const limiter = rateLimit({
 // security middleware
 app.use(hpp());
 app.use(helmet());
-app.use("/api", limiter);
+app.use(limiter);
 // app.use(mongoSanitize());
 app.use(cookieParser());
 
@@ -73,7 +73,7 @@ app.get("/user", (req, res) => {
 // API route
 
 app.use("/health", healthRoute);
-app.use("/api/v1/user", userRoute);
+app.use("/v1/user", userRoute);
 
 // global error handler
 //404 route
