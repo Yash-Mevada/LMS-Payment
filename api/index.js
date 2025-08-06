@@ -67,7 +67,7 @@ app.use(
 );
 
 app.get("/user", (req, res) => {
-  res.send("Hello World!");
+  res.status(200).json({ data: "Hello World!" });
 });
 
 // API route
