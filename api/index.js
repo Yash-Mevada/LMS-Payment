@@ -18,7 +18,7 @@ import userRoute from "../routes/user.routes.js";
 dotenv.config();
 
 // Connect to database
-await connectDB();
+// await connectDB();
 
 const app = express();
 
