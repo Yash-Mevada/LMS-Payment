@@ -31,7 +31,7 @@ const limiter = rateLimit({
 // security middleware
 app.use(hpp());
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 // app.use(mongoSanitize());
 app.use(cookieParser());
 
