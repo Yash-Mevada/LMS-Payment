@@ -8,7 +8,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectDB from "../databaseConnection/db.js";
+// import connectDB from "../databaseConnection/db.js";
 import serverless from "serverless-http";
 
 import healthRoute from "../routes/health.routes.js";
