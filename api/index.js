@@ -49,22 +49,22 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // cors configuration
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Accept",
-      "X-Requested-With",
-      "device-remember-token",
-      "Access-Control-Allow-Origin",
-      "Origin",
-    ],
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_URL || "http://localhost:5173",
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+//     allowedHeaders: [
+//       "Content-Type",
+//       "Authorization",
+//       "Accept",
+//       "X-Requested-With",
+//       "device-remember-token",
+//       "Access-Control-Allow-Origin",
+//       "Origin",
+//     ],
+//   })
+// );
 console.log("user----------------------------api------------");
 
 app.get("/", (req, res) => {
