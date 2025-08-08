@@ -30,7 +30,7 @@ const limiter = rateLimit({
 // security middleware
 app.use(hpp());
 app.use(helmet());
-app.use("/api", limiter);
+// app.use(limiter);
 // app.use(mongoSanitize());
 app.use(cookieParser());
 
@@ -64,6 +64,7 @@ app.use(
     ],
   })
 );
+console.log("user----------------------------api------------");
 
 app.get("/user", (req, res) => {
   res.send("Hello World!");
@@ -89,3 +90,6 @@ app.listen(process.env.PORT, () => {
     `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`
   );
 });
+
+//  export as a serverless function
+// export default serverless(app);
