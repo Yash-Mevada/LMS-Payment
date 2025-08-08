@@ -22,17 +22,17 @@ await connectDB();
 const app = express();
 
 // rate limit
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100, // limit each IP to 100 requests per windowMs
-// });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
 
 // // security middleware
-// app.use(hpp());
-// app.use(helmet());
-// // app.use(limiter);
-// // app.use(mongoSanitize());
-// app.use(cookieParser());
+app.use(hpp());
+app.use(helmet());
+// app.use(limiter);
+// app.use(mongoSanitize());
+app.use(cookieParser());
 
 if (process.env.NODE_ENV === "development") {
   //   console.log(`Application is running in ${process.env.ENV_NAME} mode`);
@@ -48,26 +48,26 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // cors configuration
-// app.use(
-//   cors({
-//     origin: process.env.CLIENT_URL || "http://localhost:5173",
-//     credentials: true,
-//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-//     allowedHeaders: [
-//       "Content-Type",
-//       "Authorization",
-//       "Accept",
-//       "X-Requested-With",
-//       "device-remember-token",
-//       "Access-Control-Allow-Origin",
-//       "Origin",
-//     ],
-//   })
-// );
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "X-Requested-With",
+      "device-remember-token",
+      "Access-Control-Allow-Origin",
+      "Origin",
+    ],
+  })
+);
 console.log("user----------------------------api------------");
 
-app.get("/user", (req, res) => {
-  res.send("Hello World!");
+app.get("/", (req, res) => {
+  res.send("Hello Welcome back!");
 });
 
 // API route
