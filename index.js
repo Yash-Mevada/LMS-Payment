@@ -77,12 +77,12 @@ app.use("/api/v1/user", userRoute);
 
 // global error handler
 //404 route
-// app.use((req, res) => {
-//   res.status(404).json({
-//     message: "Route not found",
-//     status: "error",
-//   });
-// });
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found",
+    status: "error",
+  });
+});
 
 // server listen
 app.listen(process.env.PORT, () => {
