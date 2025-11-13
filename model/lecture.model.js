@@ -49,4 +49,4 @@ lectureSchema.pre("save", function (next) {
   next();
 });
 
-export default Lecture = mongoose.model("Lecture", lectureSchema);
+export const Lecture = mongoose.model("Lecture", lectureSchema);

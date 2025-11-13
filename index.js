@@ -12,6 +12,7 @@ import connectDB from "./databaseConnection/db.js";
 
 import healthRoute from "./routes/health.routes.js";
 import userRoute from "./routes/user.routes.js";
+import cronJobRoute from "./routes/cronjob.router.js";
 
 // Load environment variables
 dotenv.config();
@@ -74,6 +75,7 @@ app.get("/", (req, res) => {
 
 app.use("/health", healthRoute);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/cronjob", cronJobRoute);
 
 // global error handler
 //404 route
