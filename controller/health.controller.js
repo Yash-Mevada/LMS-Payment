@@ -41,8 +41,8 @@ export const healthCheck = async (req, res) => {
 
     const httpStatus =
       healthStatus.service?.database.status === "healthy" ? 200 : 503;
-    // return res.status(httpStatus).json(healthStatus);
-    return healthStatus;
+    return res.status(httpStatus).json(healthStatus);
+    // return healthStatus;
   } catch (error) {
     console.error("Health check Failed", error);
     res.status(500).json({
