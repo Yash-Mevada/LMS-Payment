@@ -13,6 +13,10 @@ import connectDB from "./databaseConnection/db.js";
 import healthRoute from "./routes/health.routes.js";
 import userRoute from "./routes/user.routes.js";
 import cronJobRoute from "./routes/cronjob.router.js";
+import axios from "axios";
+
+import cron from "node-cron";
+import { cleanupInactiveUsers } from "./controller/cron.controller.js";
 
 // Load environment variables
 dotenv.config();
@@ -75,7 +79,23 @@ app.get("/", (req, res) => {
 
 app.use("/health", healthRoute);
 app.use("/api/v1/user", userRoute);
-app.use("/api/v1/cronjob", cronJobRoute);
+// app.use("/api/v1/cronjob", cronJobRoute);
+
+// ===================== CRON JOB SETUP =====================
+cron.schedule("*/1 * * * *", async () => {
+  console.log("⏰ Cron job triggered!");
+
+  try {
+    // If running locally:
+    // const url = `http://localhost:${process.env.PORT}/api/v1/cronjob`;
+
+    // If deployed (use your production URL)
+    await cleanupInactiveUsers();
+    console.log("✅ Cron job success:");
+  } catch (error) {
+    console.error("❌ Cron job error:", error.message);
+  }
+});
 
 // global error handler
 //404 route
