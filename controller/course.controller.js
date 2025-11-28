@@ -28,7 +28,7 @@ export const createCourse = catchAsync(async (req, res) => {
     throw new ApiError("Thumbnail is required", 400);
   }
 
-  const publicUrl = await uploadMedia(req.file?.path);
+  const publicUrl = await uploadMedia(req.file?.buffer);
 
   if (!publicUrl) {
     throw new ApiError("Thumbnail upload failed while creating course", 400);
@@ -118,7 +118,7 @@ export const updateCourseById = catchAsync(async (req, res) => {
 
   // update courseThumbnail
   if (req.file) {
-    const thumbnailResult = await uploadMedia(req.file.path);
+    const thumbnailResult = await uploadMedia(req.file.buffer);
     if (!thumbnailResult) {
       throw new ApiError(
         "Thumbnail upload failed while updating course thumbnail",
