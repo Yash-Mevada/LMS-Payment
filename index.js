@@ -12,6 +12,7 @@ import connectDB from "./databaseConnection/db.js";
 
 import healthRoute from "./routes/health.routes.js";
 import userRoute from "./routes/user.routes.js";
+import courseRouter from "./routes/course.router.js";
 import cronJobRoute from "./routes/cronjob.router.js";
 import axios from "axios";
 
@@ -79,23 +80,25 @@ app.get("/", (req, res) => {
 
 app.use("/health", healthRoute);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/course", courseRouter);
+
 // app.use("/api/v1/cronjob", cronJobRoute);
 
 // ===================== CRON JOB SETUP =====================
-cron.schedule("*/1 * * * *", async () => {
-  console.log("⏰ Cron job triggered!");
+// cron.schedule("*/1 * * * *", async () => {
+//   console.log("⏰ Cron job triggered!");
 
-  try {
-    // If running locally:
-    // const url = `http://localhost:${process.env.PORT}/api/v1/cronjob`;
+//   try {
+//     // If running locally:
+//     // const url = `http://localhost:${process.env.PORT}/api/v1/cronjob`;
 
-    // If deployed (use your production URL)
-    await cleanupInactiveUsers();
-    console.log("✅ Cron job success:");
-  } catch (error) {
-    console.error("❌ Cron job error:", error.message);
-  }
-});
+//     // If deployed (use your production URL)
+//     await cleanupInactiveUsers();
+//     console.log("✅ Cron job success:");
+//   } catch (error) {
+//     console.error("❌ Cron job error:", error.message);
+//   }
+// });
 
 // global error handler
 //404 route

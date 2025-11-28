@@ -16,6 +16,7 @@ export const uploadMedia = async (file) => {
   try {
     const uploadResponse = await cloudinary.uploader.upload(file, {
       resource_type: "auto",
+      folder: "lms-payment-project",
     });
     return uploadResponse;
   } catch (error) {
