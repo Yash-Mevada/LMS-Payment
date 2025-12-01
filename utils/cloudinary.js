@@ -1,6 +1,8 @@
 import { v2 as cloudinary } from "cloudinary";
 
 import dotenv from "dotenv";
+import { ApiError } from "../middleware/error.middleware.js";
+import { Readable } from "node:stream";
 
 dotenv.config({});
 
@@ -21,6 +23,30 @@ export const uploadMedia = async (file) => {
     return uploadResponse;
   } catch (error) {
     console.log("Error while uploading on cloudinary ", error);
+  }
+};
+
+// upload stream media
+export const uploadStreamMedia = async (fileBuffer, fileName) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "lms-payment-project",
+          resource_type: "auto",
+          public_id: fileName.split(".")[0],
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+
+      Readable.from(fileBuffer).pipe(uploadStream);
+    });
+  } catch (error) {
+    console.log("Error while uploading on cloudinary ", error.message);
+    throw new ApiError("Error while uploading on cloudinary", 400);
   }
 };
 

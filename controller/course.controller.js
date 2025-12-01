@@ -1,6 +1,6 @@
 import { ApiError, catchAsync } from "../middleware/error.middleware.js";
 import { Course } from "../model/course.model.js";
-import { uploadMedia } from "../utils/cloudinary.js";
+import { uploadMedia, uploadStreamMedia } from "../utils/cloudinary.js";
 
 // create course
 export const createCourse = catchAsync(async (req, res) => {
@@ -28,7 +28,10 @@ export const createCourse = catchAsync(async (req, res) => {
     throw new ApiError("Thumbnail is required", 400);
   }
 
-  const publicUrl = await uploadMedia(req.file?.buffer);
+  const publicUrl = await uploadStreamMedia(
+    req.file?.buffer,
+    req.file.originalname
+  );
 
   if (!publicUrl) {
     throw new ApiError("Thumbnail upload failed while creating course", 400);
