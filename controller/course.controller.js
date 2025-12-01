@@ -60,20 +60,80 @@ export const createCourse = catchAsync(async (req, res) => {
 
 // get all courses
 export const getCourses = catchAsync(async (req, res) => {
-  const allCourses = await Course.find().populate("instructor");
+  // const allCourses = await Course.find().populate("instructor");
+  // if (allCourses?.length === 0) {
+  //   //   throw new ApiError("No course found", 404);
+  //   return res.status(404).json({
+  //     success: false,
+  //     message: "No course found",
+  //     data: [],
+  //   });
+  // } else {
+  //   res.status(200).json({
+  //     success: true,
+  //     data: allCourses,
+  //   });
+  // }
+
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const allCourses = await Course.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "instructor",
+        foreignField: "_id",
+        as: "InstructorData",
+      },
+    },
+    {
+      $unwind: {
+        path: "$InstructorData",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
+      $facet: {
+        data: [
+          {
+            $skip: skip,
+          },
+          {
+            $limit: limit,
+          },
+        ],
+        totalCourses: [
+          {
+            $count: "totalCourses",
+          },
+        ],
+      },
+    },
+  ]);
+
   if (allCourses?.length === 0) {
     //   throw new ApiError("No course found", 404);
     return res.status(404).json({
       success: false,
       message: "No course found",
       data: [],
+      count: allCourses[0].totalCourses[0].totalCourses,
     });
   } else {
     res.status(200).json({
       success: true,
-      data: allCourses,
+      data: allCourses[0].data,
+      count: allCourses[0].totalCourses[0].totalCourses,
     });
   }
+  console.log(allCourses);
 });
 
 // get course by id
