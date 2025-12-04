@@ -13,6 +13,7 @@ import connectDB from "./databaseConnection/db.js";
 import healthRoute from "./routes/health.routes.js";
 import userRoute from "./routes/user.routes.js";
 import courseRouter from "./routes/course.router.js";
+import lectureRoute from "./routes/lecture.router.js";
 import cronJobRoute from "./routes/cronjob.router.js";
 import axios from "axios";
 
@@ -81,6 +82,7 @@ app.get("/", (req, res) => {
 app.use("/health", healthRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRouter);
+app.use("/api/v1/lecture", lectureRoute);
 
 // app.use("/api/v1/cronjob", cronJobRoute);
 

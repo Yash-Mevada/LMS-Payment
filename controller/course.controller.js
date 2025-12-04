@@ -133,7 +133,6 @@ export const getCourses = catchAsync(async (req, res) => {
       count: allCourses[0].totalCourses[0].totalCourses,
     });
   }
-  console.log(allCourses);
 });
 
 // get course by id
