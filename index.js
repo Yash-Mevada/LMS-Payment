@@ -19,6 +19,7 @@ import axios from "axios";
 
 import cron from "node-cron";
 import { cleanupInactiveUsers } from "./controller/cron.controller.js";
+import { errorLogger } from "./controller/auditlog.controller.js";
 
 // Load environment variables
 dotenv.config();
@@ -71,7 +72,6 @@ app.use(
     ],
   })
 );
-console.log("user----------------------------api------------");
 
 app.get("/", (req, res) => {
   res.send("Hello Welcome back!");
@@ -84,6 +84,7 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/lecture", lectureRoute);
 
+app.use(errorLogger);
 // app.use("/api/v1/cronjob", cronJobRoute);
 
 // ===================== CRON JOB SETUP =====================
@@ -117,6 +118,3 @@ app.listen(process.env.PORT, () => {
     `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`
   );
 });
-
-//  export as a serverless function
-// export default serverless(app);

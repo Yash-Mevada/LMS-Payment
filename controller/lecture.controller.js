@@ -1,6 +1,6 @@
 import { ApiError, catchAsync } from "../middleware/error.middleware.js";
 import { Lecture } from "../model/lecture.model.js";
-import { uploadStreamMedia } from "../utils/cloudinary.js";
+import { deleteVideo, uploadStreamMedia } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
 
 // create lecture
@@ -124,4 +124,64 @@ export const getLectureById = catchAsync(async (req, res) => {
 
 export const updateLectureById = catchAsync(async (req, res) => {
   const { title, description, order } = req.body;
+  if (!req.params.id) {
+    throw new ApiError("Lecture id is required", 400);
+  }
+
+  // 2️⃣ Clean update payload
+  const updateData = {};
+  if (title !== undefined) updateData.title = title;
+  if (description !== undefined) updateData.description = description;
+  if (order !== undefined) updateData.order = order;
+
+  if (req.file) {
+    const publicId = await uploadStreamMedia(
+      req.file?.buffer,
+      req.file.originalname
+    );
+    if (!publicId?.secure_url) {
+      throw new ApiError("Video upload failed while uploading lecture", 400);
+    }
+    updateData.videoUrl = publicId?.secure_url;
+    updateData.duration = publicId?.duration;
+    updateData.publicId = publicId?.public_id;
+  }
+
+  const lecture = await Lecture.findByIdAndUpdate(
+    { _id: req.params.id },
+    {
+      title,
+      description,
+      order,
+    },
+    {
+      new: true,
+      projection: {
+        publicId: 0,
+      },
+    }
+  );
+
+  if (!lecture) {
+    throw new ApiError("Lecture not found", 404);
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: lecture,
+  });
+});
+
+export const deleteLectureById = catchAsync(async (req, res) => {
+  const lectureId = req.params.id;
+  const lecture = await Lecture.findById(lectureId);
+  if (!lecture) {
+    throw new ApiError("Lecture not found", 404);
+  }
+  await deleteVideo(lecture.publicId);
+  await Lecture.deleteOne({ _id: lectureId });
+  return res.status(200).json({
+    success: true,
+    message: "Lecture deleted successfully",
+  });
 });
