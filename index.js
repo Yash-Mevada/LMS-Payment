@@ -19,7 +19,7 @@ import axios from "axios";
 
 import cron from "node-cron";
 import { cleanupInactiveUsers } from "./controller/cron.controller.js";
-import { errorLogger } from "./controller/auditlog.controller.js";
+import { errorLogger, logger } from "./controller/auditlog.controller.js";
 
 // Load environment variables
 dotenv.config();
@@ -79,11 +79,13 @@ app.get("/", (req, res) => {
 
 // API route
 
+// used for logger routes
+app.use(logger);
+
 app.use("/health", healthRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/lecture", lectureRoute);
-
 app.use(errorLogger);
 // app.use("/api/v1/cronjob", cronJobRoute);
 

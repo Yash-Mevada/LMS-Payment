@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const AuditLogSchema = new mongoose.Schema({
   userId: {
-    type: String,
+    type: new mongoose.Schema.Types.ObjectId(),
+    ref: "User",
   },
   method: {
     type: String,
