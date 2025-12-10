@@ -38,7 +38,7 @@ export const logger = (req, res, next) => {
     req.url,
     req.originalUrl
   );
-  if (req.path === "/api/v1/audit-log") {
+  if (req.url === "/api/v1/audit-log") {
     return next();
   }
   //   capture the response body data and the call res json function
