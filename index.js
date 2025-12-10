@@ -19,7 +19,8 @@ import axios from "axios";
 
 import cron from "node-cron";
 import { cleanupInactiveUsers } from "./controller/cron.controller.js";
-import { errorLogger, logger } from "./controller/auditlog.controller.js";
+import { errorLogger, logger } from "./utils/logger.js";
+import auditRoute from "./routes/auditLog.router.js";
 
 // Load environment variables
 dotenv.config();
@@ -86,7 +87,9 @@ app.use("/health", healthRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/lecture", lectureRoute);
+app.use("/api/v1/audit-log", auditRoute);
 app.use(errorLogger);
+
 // app.use("/api/v1/cronjob", cronJobRoute);
 
 // ===================== CRON JOB SETUP =====================

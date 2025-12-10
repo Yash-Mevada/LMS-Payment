@@ -1,53 +1,62 @@
+import { catchAsync } from "../middleware/error.middleware.js";
 import { AuditLog } from "../model/auditLog.model.js";
 
-function saveLog({ req, res, responseData, errorMessage }) {
-  AuditLog.create({
-    userId: req.user?._id || null,
-    method: req.method,
-    route: req.originalUrl,
-    statusCode: res.statusCode,
-    success: !errorMessage,
-    requestBody: req.body,
-    requestParams: req.params,
-    requestQuery: req.query,
-    ip: req.ip,
-    userAgent: req.headers["user-agent"],
-    responseData,
-    errorMessage,
-  }).catch(() => {});
-}
+export const getAuditLogs = catchAsync(async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
 
-export const errorLogger = (err, req, res, next) => {
-  saveLog({
-    req,
-    res,
-    responseData: null,
-    errorMessage: err.message,
+  const auditLogsData = await AuditLog.aggregate([
+    {
+      $match: {
+        success: req.body?.status ? req.body?.status : true,
+      },
+    },
+    {
+      $facet: {
+        data: [
+          {
+            $skip: skip,
+          },
+          {
+            $limit: limit,
+          },
+        ],
+        totalLogs: [
+          {
+            $count: "totalLogs",
+          },
+        ],
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+  ]);
+
+  if (auditLogsData?.length === 0) {
+    return res.status(200).json({
+      success: true,
+      data: [],
+      count: 0,
+      message: "No logs found",
+    });
+  } else {
+    return res.status(200).json({
+      success: true,
+      data: auditLogsData[0].data,
+      count: auditLogsData[0].totalLogs[0].totalLogs,
+    });
+  }
+});
+
+export const deleteAllAuditLogs = catchAsync(async (req, res) => {
+  const auditLogs = await AuditLog.deleteMany({});
+  return res.status(200).json({
+    success: true,
+    message: "All audit logs deleted successfully",
+    data: auditLogs,
   });
-
-  next(err);
-};
-
-export const logger = (req, res, next) => {
-  res.on("finish", async () => {
-    try {
-      await AuditLog.create({
-        userId: req.id || null,
-        method: req.method,
-        route: req.originalUrl,
-        statusCode: res.statusCode,
-        success: res.statusCode < 400,
-        requestBody: req.body,
-        requestParams: req.params,
-        requestQuery: req.query,
-        ip: req.ip,
-        userAgent: req.headers["user-agent"],
-        responseData: res?.body,
-        message: res.message,
-      });
-    } catch (error) {
-      console.log("Error while saving Data to DB", error);
-    }
-  });
-  next();
-};
+});
