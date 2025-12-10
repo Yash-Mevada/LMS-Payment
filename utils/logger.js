@@ -32,7 +32,7 @@ export const logger = (req, res, next) => {
   let responseData;
   const oldResponseData = res.json;
 
-  console.log("request path----------------", req.path);
+  console.log("request path----------------", req.path, req.file);
   if (req.path === "/api/v1/audit-log") {
     return next();
   }
