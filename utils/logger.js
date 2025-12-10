@@ -32,7 +32,7 @@ export const logger = (req, res, next) => {
   let responseData;
   const oldResponseData = res.json;
 
-  if (req.path === "/api/v1/audit-log/getAuditLogs") {
+  if (req.path === "/api/v1/audit-log") {
     return next();
   }
   //   capture the response body data and the call res json function
