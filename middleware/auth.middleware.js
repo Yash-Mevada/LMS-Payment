@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { ApiError, catchAsync } from "./error.middleware.js";
 
 export const isAuthenticated = catchAsync(async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     throw new ApiError("You are not logged in", 401);
