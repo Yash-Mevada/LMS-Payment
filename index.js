@@ -52,14 +52,14 @@ if (process.env.NODE_ENV === "development") {
 app.use(
   express.json({
     limit: "10kb",
-  })
+  }),
 );
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 // cors configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [process.env.CLIENT_URL, "http://localhost:5173"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
     allowedHeaders: [
@@ -71,7 +71,7 @@ app.use(
       "Access-Control-Allow-Origin",
       "Origin",
     ],
-  })
+  }),
 );
 
 app.get("/", (req, res) => {
@@ -120,6 +120,6 @@ app.use((req, res) => {
 // server listen
 app.listen(process.env.PORT, () => {
   console.log(
-    `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`
+    `Server is running on port ${process.env.PORT} and ${process.env.NODE_ENV} mode`,
   );
 });
